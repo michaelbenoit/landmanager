@@ -1,0 +1,53 @@
+name: landmanager
+version: 1.0
+author: michael benoit
+main: LandManager
+
+commands:
+  land:
+    description: Commands to manage your land
+    usage: wrong command...
+  land buy:
+    description: Buys the current land
+    usage: /land buy
+    permission: landmanager.buy
+  land info:
+    description: Shows land information
+    usage: /land info
+    permission: landmanager.info
+  land initworld:
+    description: Initializes the complete world with new land regions
+    usage: /land initworld
+    permission: landmanager.initworld
+  land regen:
+    description: Regenerates the complete land
+    usage: /land regen
+    permission: landmanager.regen
+  land clear:
+    description: Removes all lands from the world
+    usage: /land clear
+    permission: landmanager.clear
+
+permissions:
+   landmanager.*:
+     description: Gives access to all landmanager commands
+     children:
+       landmanager.buy: true
+       landmanager.info: true
+       landmanager.initworld: true
+       landmanager.regen: true
+   landmanager.buy:
+       description: Allows you to buy the current land
+       default: true
+   landmanager.info:
+       description: Allows you to execute land info
+       default: true
+   landmanager.initworld:
+       description: Allows you to execute land initworld
+       default: op
+   landmanager.regen:
+       description: Allows you to execute land regen
+       default: true
+   landmanager.clear:
+       description: Allows you to remove all regions
+       default: op
