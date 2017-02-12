@@ -6,6 +6,7 @@
 package de.bensoft.bukkit.plugins.landmanager;
 
 import de.bensoft.bukkit.plugins.landmanager.dynmap.DynmapHandler;
+import de.bensoft.bukkit.plugins.landmanager.handler.ChunkHandler;
 import de.bensoft.bukkit.plugins.landmanager.listener.BlockBuildListener;
 import de.bensoft.bukkit.plugins.landmanager.listener.ChunkLoadListener;
 import de.bensoft.bukkit.plugins.landmanager.listener.SaveWorldListener;
@@ -22,8 +23,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class LandManager extends JavaPlugin {
 
     private LandManagerModel model;
-    private ChunkLoadListener chunkLoadListener;
     private DynmapHandler dynmapHandler;
+    private ChunkHandler chunkHandler;
 
     private static LandManager instance;
 
@@ -52,18 +53,11 @@ public class LandManager extends JavaPlugin {
         load();
 
         // Handle already loaded chunks
-        chunkLoadListener = new ChunkLoadListener();
-        for (final World world : getServer().getWorlds()) {
-            if (ConfigUtil.isWorldEnabled(world)) {
-                for (final Chunk chunk : world.getLoadedChunks()) {
-                    chunkLoadListener.handleChunk(chunk);
-                }
-            }
-        }
+
 
         // Register
         getCommand("land").setExecutor(new LandCommand());
-        getServer().getPluginManager().registerEvents(chunkLoadListener, this);
+        getServer().getPluginManager().registerEvents(new ChunkLoadListener(), this);
         getServer().getPluginManager().registerEvents(new SaveWorldListener(), this);
         getServer().getPluginManager().registerEvents(new BlockBuildListener(), this);
 
@@ -71,6 +65,10 @@ public class LandManager extends JavaPlugin {
         // Dynmap
         dynmapHandler = new DynmapHandler();
         dynmapHandler.load();
+
+        // Chunk loading
+        chunkHandler = new ChunkHandler();
+        chunkHandler.addAllOfWorlds(getServer().getWorlds());
     }
 
     @Override
@@ -83,8 +81,8 @@ public class LandManager extends JavaPlugin {
         return model;
     }
 
-    public ChunkLoadListener getChunkLoadListener() {
-        return chunkLoadListener;
+    public ChunkHandler getChunkHandler() {
+        return chunkHandler;
     }
 
     public DynmapHandler getDynmapHandler() {

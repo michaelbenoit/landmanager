@@ -86,7 +86,9 @@ public class DynmapHandler {
     }
 
     public void reload() {
-        server.getScheduler().scheduleSyncDelayedTask(landManager, new UpdateJob(), 40);
+        if (dynmapAPI != null) {
+            server.getScheduler().scheduleSyncDelayedTask(landManager, new UpdateJob(), 40);
+        }
     }
 
     private void handleLand(final Land land) {

@@ -1,7 +1,7 @@
 name: landmanager
 version: 1.0
 author: michael benoit
-main: LandManager
+main: de.bensoft.bukkit.plugins.landmanager.LandManager
 
 commands:
   land:

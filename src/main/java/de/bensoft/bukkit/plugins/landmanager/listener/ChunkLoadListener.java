@@ -26,48 +26,7 @@ public class ChunkLoadListener implements Listener {
 
     @EventHandler
     public void onChunkLoaded(final ChunkLoadEvent chunkLoadEvent) {
-        handleChunk(chunkLoadEvent.getChunk());
-    }
-
-    public void handleChunk(Chunk chunk) {
-        final LandManager landManager = LandManager.getInstance();
-        final LandManagerModel model = landManager.getModel();
-
-        final World world = chunk.getWorld();
-        Land land = ModelUtil.findLandByChunk(model, chunk);
-
-        if (ConfigUtil.isWorldEnabled(world)) {
-
-            // Create land if not existing yet
-            if (land == null) {
-
-                LandWorld landWorld = ModelUtil.getLandWorldByWorld(model, world);
-                if (landWorld == null) {
-                    landWorld = new LandWorld();
-                    landWorld.setName(world.getName());
-                    model.getLandWorlds().add(landWorld);
-                }
-
-                land = new Land();
-                land.setName(ModelUtil.getLandNameByChunk(chunk));
-                land.setStartX(chunk.getX());
-                land.setStartZ(chunk.getZ());
-                land.setLandStatus(LandStatus.AVAILABLE);
-                land.setLandWorld(landWorld);
-
-                final SaveState initialSaveState = SaveState.createInitial(chunk, land);
-                land.getSaveStates().add(initialSaveState);
-
-                landWorld.getLands().add(land);
-            }
-
-        } else {
-            // Remove the land if the world is disabled
-            if (land != null) {
-                final LandWorld landWorld = ModelUtil.getLandWorldByWorld(model, world);
-                landWorld.getLands().remove(land);
-            }
-        }
+        LandManager.getInstance().getChunkHandler().add(chunkLoadEvent.getChunk());
     }
 
 }

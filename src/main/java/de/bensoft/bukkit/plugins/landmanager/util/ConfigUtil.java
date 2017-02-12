@@ -28,6 +28,8 @@ public class ConfigUtil {
             config.addDefault("worlds." + world.getName() + ".enabled", false);
         }
 
+        config.addDefault("updatePeriod", 500);
+
         config.addDefault("price.available", 500);
         config.addDefault("price.transfareable", 800);
 
@@ -61,5 +63,9 @@ public class ConfigUtil {
 
     public static int getDynmapUpdatePeriod() {
         return LandManager.getInstance().getConfig().getInt("dynmap.updatePeriod");
+    }
+
+    public static int getUpdatePeriod() {
+        return LandManager.getInstance().getConfig().getInt("updatePeriod");
     }
 }

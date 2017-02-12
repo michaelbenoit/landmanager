@@ -50,9 +50,7 @@ public class ResetWorldCmd implements SubCommand {
         }
 
         if (ConfigUtil.isWorldEnabled(world)) {
-            for (final Chunk chunk : world.getLoadedChunks()) {
-                landManager.getChunkLoadListener().handleChunk(chunk);
-            }
+            landManager.getChunkHandler().addAll(world.getLoadedChunks());
         }
 
         commandSender.sendMessage(MessageUtil.translateMessage(commandSender,
