@@ -35,7 +35,7 @@ public class ResetCmd implements SubCommand {
         if (land == null) {
             player.sendMessage(MessageUtil.translateMessage(player, Message.NO_LAND_FOUND));
         } else {
-            land.resetToInitial(player.getWorld());
+            land.resetToInitial();
         }
 
 

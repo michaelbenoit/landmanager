@@ -7,6 +7,7 @@ package de.bensoft.bukkit.plugins.landmanager.listener;
 
 import de.bensoft.bukkit.plugins.landmanager.model.Land;
 import de.bensoft.bukkit.plugins.landmanager.model.ModelUtil;
+import de.bensoft.bukkit.plugins.landmanager.util.ConfigUtil;
 import de.bensoft.bukkit.plugins.landmanager.util.Message;
 import de.bensoft.bukkit.plugins.landmanager.util.MessageUtil;
 import de.bensoft.bukkit.plugins.landmanager.LandManager;
@@ -24,8 +25,8 @@ public class BlockBuildListener implements Listener {
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent ev) {
-        final boolean canBuild = canBuild(ev.getPlayer(),
-                ev.getBlock());
+
+        final boolean canBuild = canBuild(ev.getPlayer(), ev.getBlock());
         if (!canBuild) {
             ev.getPlayer().sendMessage(MessageUtil.translateMessage(
                     ev.getPlayer(), Message.NOT_ALLOWED_TO_BUILD));
@@ -36,8 +37,7 @@ public class BlockBuildListener implements Listener {
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent ev) {
-        final boolean canBuild = canBuild(ev.getPlayer(),
-                ev.getBlock());
+        final boolean canBuild = canBuild(ev.getPlayer(), ev.getBlock());
         if (!canBuild) {
             ev.getPlayer().sendMessage(MessageUtil.translateMessage(
                     ev.getPlayer(), Message.NOT_ALLOWED_TO_BUILD));
@@ -48,11 +48,13 @@ public class BlockBuildListener implements Listener {
 
     private boolean canBuild(Player player, Block blk) {
         final LandManager landManager = LandManager.getInstance();
+
         final Land land = ModelUtil.findLandByChunk(
                 landManager.getModel(),
                 blk.getChunk());
+
         if (land == null) {
-            return true;
+            return !ConfigUtil.isWorldEnabled(player.getWorld());
         } else {
             return land.canBuild(player);
         }

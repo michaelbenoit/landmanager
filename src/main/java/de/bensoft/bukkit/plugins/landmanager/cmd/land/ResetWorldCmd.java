@@ -12,11 +12,9 @@ import de.bensoft.bukkit.plugins.landmanager.model.LandManagerModel;
 import de.bensoft.bukkit.plugins.landmanager.model.LandWorld;
 import de.bensoft.bukkit.plugins.landmanager.model.ModelUtil;
 import de.bensoft.bukkit.plugins.landmanager.security.Permissions;
-import de.bensoft.bukkit.plugins.landmanager.util.ConfigUtil;
 import de.bensoft.bukkit.plugins.landmanager.util.Message;
 import de.bensoft.bukkit.plugins.landmanager.util.MessageUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 
@@ -49,9 +47,7 @@ public class ResetWorldCmd implements SubCommand {
             landManagerModel.getLandWorlds().remove(landWorld);
         }
 
-        if (ConfigUtil.isWorldEnabled(world)) {
-            landManager.getChunkHandler().addAll(world.getLoadedChunks());
-        }
+
 
         commandSender.sendMessage(MessageUtil.translateMessage(commandSender,
                 Message.WORLD_RE_INITIALIZED, sWorld));

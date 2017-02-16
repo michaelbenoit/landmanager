@@ -26,6 +26,9 @@ public class LandCommand extends AbstractMainCommand {
         SUB_COMMAND_LIST.add(new ResetCmd());
         SUB_COMMAND_LIST.add(new BackupCmd());
         SUB_COMMAND_LIST.add(new DynmapCommand());
+        SUB_COMMAND_LIST.add(new RemoveCmd());
+        SUB_COMMAND_LIST.add(new InitCmd());
+
     }
 
     @Override

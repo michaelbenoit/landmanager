@@ -17,12 +17,17 @@ import org.dynmap.markers.AreaMarker;
 import org.dynmap.markers.MarkerAPI;
 import org.dynmap.markers.MarkerSet;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 /**
  * Created by michaelbenoit on 05.02.17.
  */
 public class DynmapHandler {
+
+    private final ScheduledThreadPoolExecutor sch = (ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(1);
 
     private static final String MARKER_SET = "landmanager.markerset";
     private static final String MARKER_SET_NAME = "Landmanager";
@@ -75,7 +80,7 @@ public class DynmapHandler {
 
 
         updatePeriod = ConfigUtil.getDynmapUpdatePeriod();
-        server.getScheduler().scheduleSyncDelayedTask(landManager, new UpdateJob(), 40);
+        sch.schedule(new UpdateJob(), updatePeriod, TimeUnit.SECONDS);
 
     }
 
@@ -87,7 +92,7 @@ public class DynmapHandler {
 
     public void reload() {
         if (dynmapAPI != null) {
-            server.getScheduler().scheduleSyncDelayedTask(landManager, new UpdateJob(), 40);
+            sch.schedule(new UpdateJob(), updatePeriod, TimeUnit.SECONDS);
         }
     }
 
@@ -114,7 +119,7 @@ public class DynmapHandler {
         if (areaMarker == null) {
             areaMarker = markerSet.createAreaMarker(
                     land.getName(),
-                    land.getName(),
+                    land.getInfoMessage(),
                     false,
                     land.getLandWorld().getName(),
                     x, z,
@@ -149,6 +154,8 @@ public class DynmapHandler {
     }
 
     private class UpdateJob implements Runnable {
+
+
         @Override
         public void run() {
             log.info("Refreshing Landmanager dynmap");
@@ -160,8 +167,7 @@ public class DynmapHandler {
                 }
             }
 
-            server.getScheduler().scheduleSyncDelayedTask(
-                    landManager, new UpdateJob(), updatePeriod);
+            sch.schedule(new UpdateJob(), updatePeriod, TimeUnit.SECONDS);
         }
     }
 }

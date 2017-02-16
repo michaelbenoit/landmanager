@@ -28,13 +28,13 @@ public class ConfigUtil {
             config.addDefault("worlds." + world.getName() + ".enabled", false);
         }
 
-        config.addDefault("updatePeriod", 500);
+        config.addDefault("updatePeriod", 20);
 
         config.addDefault("price.available", 500);
         config.addDefault("price.transfareable", 800);
 
         config.addDefault("dynmap.enabled", false);
-        config.addDefault("dynmap.updatePeriod", 1000);
+        config.addDefault("dynmap.updatePeriod", 30);
 
         landManager.saveConfig();
     }

@@ -41,7 +41,7 @@ public class MessageUtil {
         }
     }
 
-    public static String translateMessage(Player player, Message message, String... replacements) {
+    public static String translateMessage(Player player, Message message, Object... replacements) {
         final ResourceBundle resourceBundle = getBundle(getPlayerLanguage(player));
 
         final String msg;
@@ -58,7 +58,7 @@ public class MessageUtil {
         }
     }
 
-    public static String translateMessage(CommandSender commandSender, Message message, String... replacements) {
+    public static String translateMessage(CommandSender commandSender, Message message, Object... replacements) {
 
         if (commandSender instanceof Player) {
             return translateMessage((Player) commandSender, message, replacements);
@@ -68,7 +68,7 @@ public class MessageUtil {
 
     }
 
-    public static String translateMessage(Message message, String... replacements) {
+    public static String translateMessage(Message message, Object... replacements) {
         final String msg;
         try {
             msg = getBundle(DEFAULT_LANG).getString(message.name());

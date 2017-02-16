@@ -35,8 +35,7 @@ public class InfoCmd implements SubCommand {
         if (land == null) {
             player.sendMessage(MessageUtil.translateMessage(player, Message.NO_LAND_FOUND));
         } else {
-            player.sendMessage(MessageUtil.translateMessage(player, Message.LAND_INFO,
-                    land.getName(), land.getOwner()));
+            player.sendMessage(land.getInfoMessage(player));
         }
 
         return false;

@@ -10,6 +10,8 @@ import de.bensoft.bukkit.plugins.landmanager.exception.LandManagerException;
 import de.bensoft.bukkit.plugins.landmanager.util.ConfigUtil;
 import de.bensoft.bukkit.plugins.landmanager.util.EconomyUtil;
 import de.bensoft.bukkit.plugins.landmanager.util.Message;
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
@@ -107,6 +109,11 @@ public class Land implements Serializable {
     }
 
     public int getPriceForPlayer(final Player player) {
+
+        if (player == null) {
+            return 0;
+        }
+
         if (!EconomyUtil.getInstance().isAvailable()) {
             return 0;
         }
@@ -178,7 +185,7 @@ public class Land implements Serializable {
         setLandStatus(LandStatus.BUYABLE);
     }
 
-    public void resetToInitial(final World world) {
+    public void resetToInitial() {
         SaveState saveState = null;
         for (SaveState st : getSaveStates()) {
             if (st.getSaveStateType().equals(SaveStateType.INITIAL)) {
@@ -197,5 +204,41 @@ public class Land implements Serializable {
     public void backup(final String name) {
         final SaveState saveState = SaveState.create(this, name);
         getSaveStates().add(saveState);
+    }
+
+
+    public String getInfoMessage(final Player player) {
+        return getInfoMessage(player, true);
+    }
+
+    public String getInfoMessage() {
+        return getInfoMessage(null, false);
+    }
+
+    private String getInfoMessage(Player player, boolean colored) {
+        final String clYellow = colored ? ChatColor.YELLOW.toString() : "";
+        final StringBuilder sb = new StringBuilder();
+
+        if (colored) {
+            sb.append(clYellow + "###############################\n");
+        }
+
+        sb.append(clYellow + MessageUtil.translateMessage(player, Message.LAND_INFO_NAME, getName()) + "\n");
+
+        if (!StringUtils.isEmpty(getOwner())) {
+            sb.append(clYellow + MessageUtil.translateMessage(player, Message.LAND_INFO_OWNER, getOwner()) + "\n");
+        }
+
+        final int price = getPriceForPlayer(player);
+        if (price != 0) {
+            sb.append(clYellow + MessageUtil.translateMessage(player, Message.LAND_INFO_SELL, price) + "\n");
+        }
+
+        if (colored) {
+            sb.append(clYellow + "###############################");
+        }
+
+
+        return sb.toString();
     }
 }

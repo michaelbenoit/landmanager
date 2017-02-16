@@ -18,7 +18,11 @@ public enum Permissions {
     SELL("sell"),
     RESET("reset"),
     RESET_WORLD("resetworld"),
-    BACKUP("backup");
+    BACKUP("backup"),
+    INIT("init"),
+    REMOVE("remove"),
+    ;
+
 
 
     private final String value;

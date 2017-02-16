@@ -24,7 +24,7 @@ import java.nio.file.Files;
  */
 public class LandSnapshot implements Serializable {
 
-    private int BLK_SIZE = (4 * 4) + 1;
+    private int BLK_SIZE = 4 + 1;
 
     private final LandManager landManager;
     private final File file;
@@ -66,8 +66,13 @@ public class LandSnapshot implements Serializable {
         try {
             final ByteArrayInputStream bis = new ByteArrayInputStream(data);
             final byte[] buffer = new byte[BLK_SIZE];
-            while (bis.read(buffer, 0, BLK_SIZE) != -1) {
-                restoreBlock(buffer);
+            for (int y = 0; y < 255; y++) {
+                for (int x = 0; x < 16; x++) {
+                    for (int z = 0; z < 16; z++) {
+                        bis.read(buffer, 0, BLK_SIZE);
+                        restoreBlock(x, y, z, buffer);
+                    }
+                }
             }
             bis.close();
         } catch (IOException e) {
@@ -75,14 +80,9 @@ public class LandSnapshot implements Serializable {
         }
     }
 
-    private void restoreBlock(byte[] blkData) {
+    private void restoreBlock(int x, int y, int z, byte[] blkData) {
+
         int off = 0;
-        int x = readInt(off, blkData);
-        off += 4;
-        int y = readInt(off, blkData);
-        off += 4;
-        int z = readInt(off, blkData);
-        off += 4;
         int matId = readInt(off, blkData);
         off += 4;
         byte data = blkData[off];
@@ -92,7 +92,12 @@ public class LandSnapshot implements Serializable {
                 x,
                 y,
                 z);
-        block.setType(Material.getMaterial(matId));
+
+        final Material material = Material.getMaterial(matId);
+        if(material == null) {
+            throw new LandManagerException("Unable to find material with id " + matId);
+        }
+        block.setType(material);
         block.setData(data);
     }
 
@@ -142,9 +147,9 @@ public class LandSnapshot implements Serializable {
     private byte[] marshalBlock(Block block) {
         final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         try {
-            byteArrayOutputStream.write(intToByteArray(block.getX()));
-            byteArrayOutputStream.write(intToByteArray(block.getY()));
-            byteArrayOutputStream.write(intToByteArray(block.getZ()));
+            //byteArrayOutputStream.write(intToByteArray(block.getX()));
+            //byteArrayOutputStream.write(intToByteArray(block.getY()));
+            //byteArrayOutputStream.write(intToByteArray(block.getZ()));
             byteArrayOutputStream.write(intToByteArray(block.getTypeId()));
             byteArrayOutputStream.write(block.getData());
 
